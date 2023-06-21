@@ -8,12 +8,11 @@ function App() {
   const [timerLabel, setTimerLabel] = useState("Session");
   const [timeLeft, setTimeLeft] = useState(sessionTime * 60);
   const [isRunning, setIsRunning] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
   useEffect(() => {
     setTimeLeft(sessionTime * 60);
   }, [sessionTime]);
   useEffect(() => {
-    if (isRunning && !isPaused) {
+    if (isRunning) {
       const timer = setInterval(() => {
         setTimeLeft((prevTimeLeft) => {
           if (prevTimeLeft === 0) {
@@ -32,11 +31,10 @@ function App() {
       }, 1000);
       return () => clearInterval(timer);
     }
-  }, [breakTime, isPaused, isRunning, sessionTime, timerLabel]);
+  }, [breakTime, isRunning, sessionTime, timerLabel]);
   const audioRef = useRef();
   const handleStartStop = () => {
     setIsRunning((prevIsRunning) => !prevIsRunning);
-    setIsPaused(false);
   };
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60)
@@ -49,7 +47,6 @@ function App() {
     audioRef.current.pause();
     audioRef.current.currentTime = 0;
     setIsRunning(false);
-    setIsPaused(false);
     setTimerLabel("Session");
     setBreakTime(5);
     setSessionTime(25);
